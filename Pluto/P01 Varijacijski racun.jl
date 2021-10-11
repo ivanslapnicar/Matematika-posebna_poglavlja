@@ -81,7 +81,7 @@ md"""
 
 Odredite krivulju po kojoj će materijalna točka ispuštena iz ishodišta kližući se bez trenja najbrže stići u točku $A=(a,b)$. Takva krivulja zove se __brahistohrona__.
 
-![brahistohrona](files/img2411.gif) 
+![brahistohrona](https://ivanslapnicar.github.io/Matematika-posebna_poglavlja/files/img.png)
 
 
 
