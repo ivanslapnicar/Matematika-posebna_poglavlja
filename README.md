@@ -1,6 +1,6 @@
 # Matematika - posebna poglavlja
 
-Bilježnica za predmet __[Matematika - posebna poglavlja](https://nastava.fesb.unist.hr/nastava/predmeti/8237)__ koji se predaje na diplomskim studijima Konstrukcijsko-enegetskog strojarstva (261) i Računalnog projektiranja i inženjerstva (262) na [FESB-u](https://www.fesb.unist.hr/).
+Bilježnica za predmet __[Matematika - posebna poglavlja](https://nastava.fesb.unist.hr/nastava/predmeti/14077)__ koji se predaje na diplomskim studijima Konstrukcijsko-enegetskog strojarstva (261) i Računalnog projektiranja i inženjerstva (262) na [FESB-u](https://www.fesb.unist.hr/).
 
 Bilježnice su pisane u programskom jeziku [Julia](https://julialang.org) koristeći paket
 [Pluto.jl](https://github.com/fonsp/Pluto.jl). Prilagođene su direktnoj i on-line nastavi.
@@ -8,7 +8,7 @@ Bilježnice su pisane u programskom jeziku [Julia](https://julialang.org) korist
 # Pregledavanje bilježnica
 
 Unutar svojeg preglednika, bilježnice možete pregledati na poveznici
-[https://ivanslapnicar.github.io/Numericka_analiza](https://ivanslapnicar.github.io/Numericka_analiza/)
+[https://ivanslapnicar.github.io/Matematika-posebna_poglavlja/](https://ivanslapnicar.github.io/Matematika-posebna_poglavlja/)
 
 #  Izvršavanje bilježnica
 
