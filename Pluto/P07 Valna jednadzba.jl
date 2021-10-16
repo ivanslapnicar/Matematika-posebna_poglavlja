@@ -4,585 +4,210 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 7d6aa743-e05c-4f4a-9c1e-5b29903a7386
-using PlutoUI, SymPy, LinearAlgebra, Plots
+# ╔═╡ 946ca26e-2657-4ad8-8fc2-120261cc1667
+using SymPy, Plots, LinearAlgebra
 
-# ╔═╡ 0c650d04-522a-4d3d-a3a7-eef4848452b8
+# ╔═╡ 42055806-717f-4fdc-9889-a642cf4ba772
 plotly()
 
-# ╔═╡ 6eff0f94-9807-43cf-97eb-a8b29d9e6f40
-TableOfContents(title="📚 Sadržaj", aside=true)
-
-# ╔═╡ 47bf3638-8134-496d-ba98-e4611aadb720
+# ╔═╡ f6a7edb9-c364-46cf-93c3-a3fd17bd660a
 md"""
-# Problem rubnih vrijednosti
+# Valna jednadžba
 
-
-
-# Klasifikacija
-
-Neka je 
-
-$$
-a\cdot u_{xx}+b\cdot u_{xt}+c\cdot u_{tt}+d\cdot u_x+e\cdot u_t + f\cdot u + g = 0$$
-
-i neka je
-
-$$
-D=b^2-4ac.$$
-
-Vrijedi sljedeća klasifikacija:
-
-| D               | D=0                        | D<0       | D>0            |  
-| ---:            | :---                       | :---      | :--- |
-| Vrsta           | parabolička                | eliptička | hiperbolička |
-| Problem         | difuzija                   | ravnoteža                | valovi   |
-| Domena / Metoda | omeđena / SLP              | omeđena / SLP              |        |
-| Domena / Metoda | neomeđena / integr. trans. | neomeđena / integr. trans. |        |
-
-Za neomeđeni interval $(0,\infty)$ koristi se Laplaceova transformacija, a za interval $(-\infty,\infty)$ koristi se Fourierova transformacija.
-"""
-
-# ╔═╡ 2d6cce29-1383-41e1-8e8c-653db856329b
-md"""
-# Jednadžba difuzije
-
-Zadan je problem 
+Valna jednadžba, čije ćemo detalje objasniti kasnije, može se svesti na problem rubnih 
+vrijednosti kao u sljedećem primjeru:
 
 $$
 \begin{aligned}
-& u_t-u_{xx}=0  \\
-& u(x,0)=|x|, \quad -2<x<2 \\
-& u_x(-2,t)=0, \quad u_x(2,t)=0, \quad t>0 
+u_{tt}&=u_{xx},\quad 0<x<\pi\\
+u(0,t)&=0,\quad u(\pi,t)=0, \quad t>0\\
+u(x,0)&=f(x),\quad u_t(x,0)=g(x),\quad 0<x<\pi.
 \end{aligned}$$
 
-Pretpostavimo __separaciju varijabli__ (rješenje je jedinstveno pa je svaka pretpostavka korektna ako daje rješenje):
+Prema klasfikaciji, PDJ je hiperbolička, i može se riješiti separacijom varijabli i svođenjem na SLP.
+
+Funkcija $u(x,t)$ daje položaj (visinu) vala na mjestu $x$ u trenutku $t$ (na primjer, titranje žice čiji su krajevi u ovom slučaju fiksni).
+
+Primijetimo da uz rubne uvjete, kao početne uvjete zadajemo položaj (visinu) i brzinu vala u trenutku $t=0$.
+
+
+Pretpostavimo da je 
 
 $$
-u(x,t)=X(x)T(t).$$ 
+u(x,t)=X(x) \cdot T(t).$$
 
-Uvrštavanje u jednadžbu daje
-
-$$
-XT'=X''T$$
-
-odnosno (stavljamo $-\lambda$ po dogovoru)
+Jednadžba glasi
 
 $$
-\frac{T'}{T}=\frac{X''}{X}=-\lambda,$$
-
-za neki $\lambda \in\mathbb{R}$.
-
-Dobili smo SLP i populacijsku jednadžbu:
-
-1. SLP: $X''+\lambda X=0$ uz uvjete $X'(-2)=0$ i $X'(2)=0$
-2. Populacijska jednadžba: $T'+\lambda T=0$
-
-Analizirajmo tri slučaja.
-
-**Slučaj 1**,  $\lambda=0$:
-
-Rješenje jednadžbe $X''=0$ je $X=ax+b$ pa je $X'=a$. Rubni uvjet u lijevoj strani daje $X'(-2)=a=0$ pa je $X=b=konst.$ svojstvena funkcija, a $\lambda_0=0$ svojstvena vrijednost.
-
-**Slučaj 2**, $\lambda<0$:
-
-Rješenje jednadžbe $X''=-\lambda X$ je $X=a e^{\sqrt{-\lambda}x}+ b e^{-\sqrt{-\lambda}x}$. Vrijedi 
-
-$$X'=a\sqrt{-\lambda} e^{\sqrt{-\lambda}x}- b\sqrt{-\lambda} e^{-\sqrt{-\lambda}x}.$$
-
-Uvrštavanje rubnih uvjeta daje
-
-$$
-\begin{aligned}
-X'(-2)& =\sqrt{-\lambda} \big(a e^{-2\sqrt{-\lambda}}-be^{2\sqrt{-\lambda}}\big)=0\\
-X'(2) & = \sqrt{-\lambda} \big(a e^{2\sqrt{-\lambda}}-be^{-2\sqrt{-\lambda}}\big)=0.
-\end{aligned}$$
-
-Iz prve jednadžbe slijedi $a=be^{4\sqrt{-\lambda}}$ pa uvrštavanje u drugu jednadžbu daje $b\big(e^{6\sqrt{-\lambda}}-e^{-2\sqrt{-\lambda}}\big)=0$. Izraz u zagradi je nula samo za $\lambda=0$ pa je $b=0$. Iz prve jednadžbe onda slijedi $a=0$. Dakle, $X=0$ ne može biti svojstvena funkcija pa $\lambda<0$ nije svojstvena vrijednost.
-
-**Slučaj 3**, $\lambda>0$:
-
-Rješenje jednadžbe $X''=-\lambda X$ je $X=a \sin \sqrt{\lambda}x+ b \cos\sqrt{\lambda}x$. Početni uvjet $u(x,0)=|x|$ je parna funkcija pa možemo uzati koeficijent uz $\sin(\sqrt{\lambda}x)$ jednak nuli. Dakle, $X=b \cos\sqrt{\lambda}x$ pa je $X'=-b\sqrt{\lambda}\sin\sqrt{\lambda}x$. Rubni uvjeti daju
-
-$$
-\begin{aligned}
-X'(-2)& =-b\sqrt{\lambda}\sin(-2\sqrt{\lambda})=b\sqrt{\lambda}\sin(2\sqrt{\lambda})=0 \\
-X'(2) & = b\sqrt{\lambda}\sin(2\sqrt{\lambda})=0.
-\end{aligned}$$
-
-Kako je $b\neq 0$ i $\sqrt{\lambda}\neq 0$, vrijedi $2\sqrt{\lambda}=n\pi$, $n\in\mathbb{N}$. 
-
-Dakle, za $\lambda \geq 0$ SLP ima beskonačno svojstvenih vrijednosti
-
-$$
-\lambda_n = \frac{n^2\pi^2}{4}, \quad n\in \mathbb{N}\cup \{0\},$$
-
-i pripadne svojstvene funkcije 
-
-$$
-X_n(x)= A_n \cos \big(\frac{n\pi}{2}x\big).$$
-
-Za svaki $\lambda_n$ rješenje populacijske jednadžbe glasi 
-
-$$
-T_n(t)=B_n e^{\displaystyle-\frac{n^2\pi^2}{4} t}$$
-
-što zajedno daje 
-
-$$
-u_n(x,t)= C_n \cos \big(\frac{n\pi}{2}x\big ) e^{\displaystyle-\frac{n^2\pi^2}{4} t}.$$
-
-Svaka funkcija $u_n$ zadovoljava jednadžbu i rubne uvjete. 
-
-Prema __principu superpozicije__ i funkcija 
-
-$$
-u(x,t)=\sum_{n=0}^\infty u_n(x,t)= \sum_{n=0}^\infty C_n \cos \big(\frac{n\pi}{2}x\big ) e^{\displaystyle-\frac{n^2\pi^2}{4} t}$$
-
-također zadovoljava jednadžbu i rubne uvjete. Treba još odabrati koeficijente $C_n$ tako da se zadovolji i početni uvijet - radi se o razvoju u __(generalizirani) Fourierov red__ :
-
-$$
-\begin{aligned}
-& u(x,0)=\sum_{n=0}^\infty C_n \cos \big(\frac{n\pi}{2}x\big )=|x| \\
-& C_n=  \displaystyle \frac{ \big(|x|, \cos \big(\frac{n\pi}{2}x\big ) \big)}
-{\big (\cos \big(\frac{n\pi}{2}x\big ), \cos \big(\frac{n\pi}{2}x\big ) \big)}.
-\end{aligned}$$
-"""
-
-# ╔═╡ 79e6ad88-8838-4029-bead-99de981da955
-md"""
-Koristimo simboličko računanje pomoću paketa `SymPy.jl`. Za detalje o simboličkom računanju pogledajte [SymPy Tutorial](https://github.com/jverzani/SymPy.jl/blob/master/examples/tutorial.md).
-"""
-
-# ╔═╡ fc7e565d-680b-476c-bf89-4091e9c7bc0b
-begin
-	# Definirajmo simbole
-	n=symbols("n",integer=True,nonnegative=True)
-	x=symbols("x",real=True)
-end
-
-# ╔═╡ 671eea4b-486a-4e77-98bb-1dca4c56873c
-begin
-	# Definirajmo skalarni produkt
-	import LinearAlgebra.⋅
-	⋅(f,g,a,b)=integrate(f*g,(x,a,b))
-end
-
-# ╔═╡ c4d89894-088f-446c-b4ce-d9c78af73d2c
-# Umjesto 
-g=abs(x)
-
-# ╔═╡ 9b90ab1d-1843-4a3b-813e-eac93903bb05
-md"""
-Pogledajmo zadani početni uvjet:
-"""
-
-# ╔═╡ 407e4a6d-bb34-40ea-8694-1e4a21a15193
-plot(g(x),-2,2)
-
-# ╔═╡ b08a5be1-90b7-4c36-b4ac-83ca75b3d31f
-f(n,x)=cos(n*PI*x/2)
-
-# ╔═╡ 49de3080-a15b-4ea6-bfcb-d9fd4c5063fa
-# Na primjer
-f(2,x)
-
-# ╔═╡ c66069da-f439-4f7a-b1a9-8970051b221f
-f(0,x)
-
-# ╔═╡ c8c5a472-c781-4894-b557-8ff121ba4077
-md"""
-Izračunajmo koeficijente $C_n$:
-"""
-
-# ╔═╡ 07016beb-48d0-41bd-9798-ba0cc9cf10fd
-C(n)=⋅(g(x),f(n,x),-2,2)/⋅(f(n,x),f(n,x),-2,2)
-
-# ╔═╡ 8a64a59f-b6c7-42e8-ace2-e47b27fc9d0e
-C(0)
-
-# ╔═╡ d70c37fa-6bfc-43a1-a3d1-e53d680bbd78
-C(1)
-
-# ╔═╡ 3d20eccd-637e-46f9-aa4e-f6f730e445ee
-C(2)
-
-# ╔═╡ 051777e6-45df-47df-81f7-46d07d679133
-C(3)
-
-# ╔═╡ f466ab29-7dc0-4435-8feb-f40549367b91
-C(4)
-
-# ╔═╡ 694f43db-af83-46aa-ba05-ae2c40e2f1b8
-C(5)
-
-# ╔═╡ b2b2fcef-69d6-4a6c-860d-92b7ab2cafca
-# Opća formula
-⋅(g(x),f(n,x),-2,2)/⋅(f(n,x),f(n,x),-2,2)
-
-# ╔═╡ 9327f715-8ef6-4187-8e0f-674caba4ae41
-md"""
-Vidimo da je 
-
-$$
-\begin{aligned}
-& C_0=1, \\
-& C_{2k}=0, \\
-& C_{2k-1}=\displaystyle\frac{-8}{(2k-1)^2\pi^2},
-\end{aligned}$$
+X''\cdot T=X\cdot T'',$$
 
 odnosno
 
 $$
-u(x,t)=1 - \sum_{k=1}^\infty \frac{8}{(2k-1)^2\pi^2}
-\cos \bigg(\frac{(2k-1)\pi}{2}x\bigg ) e^{\displaystyle-\frac{(2k-1)^2\pi^2}{4} t}.$$
-"""
+\displaystyle\frac{X''}{X}=\frac{T''}{T}=-\lambda.$$
 
-# ╔═╡ 4c9eba19-f68e-4865-b8d2-e5b620212d4e
-md"""
-Definirajmo sumu prvih $n$ članova reda:
-"""
-
-# ╔═╡ f5edf223-60a7-48f1-8386-8dabaaba5790
-begin
-	k=symbols("k", integer=True, nonnegative=True)
-	t=symbols("t", real=True, nonnegative=True)
-end
-
-# ╔═╡ 79b3caec-b5f5-4ba4-8550-cc202eb5d9d0
-u(n,x,t)=C(n)*f(n,x)*exp(-(n^2*PI^2/4)*t)
-
-# ╔═╡ 9a95ed5f-94fd-487a-bfd2-fbea45124db3
-# Na primjer
-u(0,x,t)
-
-# ╔═╡ f96fdfc8-6bf7-4a67-b18e-0771efe377eb
-u(3,x,t)
-
-# ╔═╡ 1f7ef259-df1e-4e1b-8bff-5f03ae2252ed
-# u(3,x,t) u zadanoj točki
-u(3,0.5,0.5)
-
-# ╔═╡ 05419561-4764-418c-8184-c6be1ea6bfcc
-# Numerička vrijednost (BigFloat)
-N(u(3,0.5,0.5))
-
-# ╔═╡ 6f71559b-356a-414d-b226-a70fd50db330
-# Suma prvih n članova reda
-U(n,x,t)=sum([u(k,x,t) for k=0:n])
-
-# ╔═╡ cb246811-3d02-461e-8700-47dc8f8f347a
-# Na primjer
-U(5,0.5,0.5)
-
-# ╔═╡ 42f86e27-6812-4c3c-979d-860c40728a67
-# Numerička vrijednost
-N(U(5,0.5,0.5))
-
-# ╔═╡ 77b2e2ef-3456-4e53-b71f-0a49d2e0478c
-# Za t=0 ovo mora konvergirati u |x|
-@time N(U(11,0.5,0.0))
-
-# ╔═╡ a6b00d81-41b9-4880-961a-5a63f02cd9bd
-md"""
-__Napomena:__ Radi se o simboličkom računanju pa ne treba pretjerivati s $n$.
-
-## Crtanje
-"""
-
-# ╔═╡ d9d895a8-7b12-4415-8902-805ce2471f1c
-begin
-	m=17
-	X=range(-2,2, length=m)
-	T=range(0,5,length=m)
-end
-
-# ╔═╡ 29280217-8af2-4679-a9a8-26b83c65b7c2
-# Radi brzine pripremimo U(9) unaprijed
-U9=U(9,x,t)
-
-# ╔═╡ 4b8df6fe-6a9b-4cd1-b25b-fc8c74759d64
-# Sada je puno brže jer se samo uvrštava.
-@time Float64(U9(0,2.0))
-
-# ╔═╡ aeebc30b-210e-44cc-b876-cebfc0d6e13a
-FU9(x,t)=Float64(U9(x,t))
-
-# ╔═╡ 7888a4ef-6761-40ce-b5b6-bae3381d8264
-surface(X,T,FU9,xlabel="x",ylabel="t")
-
-# ╔═╡ 510c9f4c-bcf1-4a19-ae12-2211d01bf192
-md"""
-# Numeričko računanje i crtanje
-"""
-
-# ╔═╡ 52f2f326-8fb0-465b-93be-e019afe93061
-begin
-	Xₙ=range(-2,2,length=51)
-	Tₙ=range(0,5,length=51)
-end
-
-# ╔═╡ 4b811a75-9b72-45ed-bbaa-8e323c588a36
-begin
-	# Probajmo l od 1 do 10
-	l=5
-	h(x,t)=1-8*sum([cos.((2*k-1)*pi*x/2).*exp.(-(2*k-1)^2*pi^2*t/4)/((2*k-1)^2*π^2) 
-	        for k=1:l])
-	surface(Xₙ,Tₙ,h,xlabel="x",ylabel="t")
-end
-
-# ╔═╡ de02f5f9-9559-445c-b883-96aad3292dc8
-md"""
-## Primjer
+Iz rubnih uvjeta vidimo da možemo definirati regularni SLP po varijabli $x$:
 
 $$
 \begin{aligned}
-& u_t-u_{xx}=-u \\
-& u(x,0)=f(x)=\begin{cases}0, \quad -1<x<0 \\ x,\quad 0<x<1 \end{cases} \\
-& u(-1,t)=0,\quad u(1,t)=0 
+&X''=-\lambda X,\quad 0<x<\pi\\
+&X(0)=0,\quad X(\pi)=0.
 \end{aligned}$$
 
+Kao i do sada, analizirajmo posebno tri slučaja:
 
-Uvrštavanjem
 
-$$
-u(x,t)=X(x)T(t)$$
+__Slučaj 1.__ Za $\lambda=0$ je $X=ax+b$, $X(0)=b=0$, $X(\pi)=a\pi=0$, pa je $a=b=0$. Dakle, $\lambda_0=0$ nije svojstvena vrijednost.
 
-jednadžba prelazi u jednadžbu
 
-$$
-T'X-TX''=-TX,$$
-
-što daje dvije jednadžbe:
+__Slučaj 2.__ Za $\lambda<0$ je
 
 $$
-\frac{X''}{X}=\frac{T'+T}{T}=-\lambda.$$
+X=a e^{\sqrt{-\lambda} x} +b e^{-\sqrt{-\lambda}x},$$
 
-Jednadžba po $T$ je populacijska jednadžba koja glasi
-
-$$
-T'=-(\lambda+1)T$$
-
-i čije rješenje je
+pa prvi rubni uvjet povlači 
 
 $$
-T=Ce^{-(\lambda+1)t}.$$
+X(0)=a+b=0,$$
 
-Riješimo SLP po $X$:
+odnosno $a=-b$. Drugi uvjet sada glasi 
 
 $$
-X''=-\lambda X, \quad X(-1)=0, \quad X(1)=0.$$
+X(\pi)=a\big(e^{\sqrt{-\lambda} \pi} -e^{-\sqrt{-\lambda}\pi}\big)$$
+
+pa je $a=b=0$. Funkcija $X=0$ ne može biti svojstvena funkcija pa $\lambda<0$ nije svojstvena vrijednost. 
+
+
+__Slučaj 3.__ Za $\lambda>0$ je
+
+$$
+X=a \sin (\sqrt{\lambda} x) +b \cos (\sqrt{\lambda}x).$$
+
+Prvi rubni uvjet povlači 
+
+$$
+X(0)=b=0.$$
+
+Drugi uvjet glasi 
+
+$$
+X(\pi)=a\sin(\sqrt{\lambda}\pi)=0$$
+
+pa je $\sqrt{\lambda} \pi=n\pi$. Dakle, $\lambda_n=n^2$, $n\in\mathbb{N}$ su svojstvene vrijednosti, a $X_n(x)=\sin (nx)$ su pripadne svojstvene funkcije.
+
+Druga jednadžba sada glasi $T''=-n^2T$ pa je 
+
+$$
+T_n= a_n \cos (nt)+b_n \sin (nt).$$
+
+Prema principu superpozicije vrijedi
+
+$$
+\begin{aligned}
+u(x,t)&=\sum_{n=1}^\infty u_n(x,t)=\sum_{n=1}^\infty X_n(x) T_n(t) \\
+&= \sum_{n=1}^\infty [a_n \cos (nt)+ b_n \sin(nt)] \sin(nx).
+\end{aligned}$$
+
+Prvi početni uvjet daje
+
+$$
+u(x,0)=\sum_{n=1}^\infty a_n \sin(nx)=f(x)$$
+
+pa su $a_n$ koeficijenti razvoja funkcije $f(x)$ u Fourierov red:
+
+$$
+a_n=\frac{(f,\sin (nx))}{(\sin(nx),\sin(nx))}
+=\frac{\int\limits_0^\pi f(x)\sin(nx)\, dx}{\int\limits_0^\pi \sin^2(nx)\, dx}.$$
+
+Drugi početni uvjet daje
+
+$$
+u_t(x,0)= \sum_{n=1}^\infty b_n n \sin(nx)=g(x)$$
+
+pa su $n b_n$ koeficijenti razvoja funkcije $g(x)$ u Fourierov red, odnosno
+
+$$
+b_n=\frac{1}{n} \frac{(g,\sin (nx))}{(\sin(nx),\sin(nx))}
+=\frac{1}{n}\frac{\int\limits_0^\pi g(x)\sin(nx)\, dx}{\int\limits_0^\pi \sin^2(nx)\, dx}.$$
 """
 
-# ╔═╡ 80cb356e-065c-43ac-85a5-0d9c64cd9176
-F = SymFunction("F")
+# ╔═╡ d09ae748-fcb6-44e4-9fad-bf47ee5efc52
+md"""
+Nacrtajmo rješenje problema za $f(x)=\sin(x)$ i $g(x)=x$.
 
-# ╔═╡ e3c68a65-82ef-492e-9283-88edd8cc26e2
+Za simboličko računanje koristimo paket `SymPy.jl`, a za crtanje paket `Plots.jl` i backend `plotly()`.
+"""
+
+# ╔═╡ 21a2ac08-7935-41c2-8204-fac2c6c9aa3a
 begin
-	l₁=symbols("l",real=true,positive=true)
-	diffeq = Eq(diff(F(x), x, x) +l₁*F(x), 0)
+	n=symbols("n",integer=true,positive=true)
+	x=symbols("x",real=true)
 end
 
-# ╔═╡ ab5389ea-0126-4974-8e57-7d2782ca8b76
-ex = dsolve(diffeq)
-
-# ╔═╡ 3e56b49d-9462-4426-a88d-d6a45ce2bf9c
-ex1 = rhs(ex)
-
-# ╔═╡ 79794948-8b69-480d-a34c-a40ab0b13300
-md"""
-Uvrstimo rubne uvjete:
-"""
-
-# ╔═╡ 75b46887-f4c5-4514-aec9-e94a54477ba1
-ex1a=subs(ex1,x,-1)
-
-# ╔═╡ e6abef29-40bb-4a09-9163-39947e5364e3
-ex1b=subs(ex1,x,1)
-
-# ╔═╡ cf271e99-4be3-4fac-bcde-0988323000ce
-solve(cos(sqrt(l₁)),l₁)
-
-# ╔═╡ 0a6d295e-68be-41a9-9312-1c8fd8549cd3
-md"""
-Sustav jednadžbi je homogen i glasi
-
-$$
-\begin{bmatrix} -C_1 & C_2 \\ C_1 & C_2 \end{bmatrix} \begin{bmatrix}\sin \sqrt{\lambda} \\ \cos\sqrt{\lambda} \end{bmatrix} = \begin{bmatrix} 0\\ 0\end{bmatrix}.$$
-
-Trivijalno rješenje je u ovom slučaju očito nemoguće, a netrivijalna rješenje postoje kada je matrica sustava singularna, odnosno kada je $C_1=0$ ili $C_2=0$.
-
-Kada je $C_1=0$ onda je $\cos\sqrt{\lambda}=0$ pa je 
-
-$$
-\sqrt{\lambda}=\frac{2n+1}{2}\pi, \quad n=0,1,2,3,\ldots$$
-
-Kada je $C_2=0$ onda je $\sin\sqrt{\lambda}=0$ pa je 
-
-$$
-\sqrt{\lambda}=n\pi, \quad n=0,1,2,3,\ldots$$
-
-Dakle, rješenje problema koje zadovoljava jednadžbu i rubne uvjete ima oblik:
-
-$$
-u(x,t)=\sum_{n=0}^\infty a_n \cos \bigg(\frac{2n+1}{2}\pi x\bigg)
-e^{-\big(\big[\frac{2n+1}{2}\pi\big]^2+1\big)t}+b_n \sin (n\pi x)\,e^{-([n\pi]^2+1)t}.$$
-
-Potrebno je zadovoljiti još početni uvjet:
-
-$$
-u(x,0)=\sum_{n=0}^\infty a_n \cos \bigg(\frac{2n+1}{2}\pi x\bigg)+b_n \sin (n\pi x)=f(x).$$
- 
-Radi se o razvoju u generalizirani Fourierov red funkcije f(x): 
-"""
-
-# ╔═╡ 788235d8-c271-4d8f-abd6-9e3316c01298
-# p=piecewise((0,Lt(x,0)),(x,Ge(x,0)))
-p(x)=x*Heaviside(x)
-
-# ╔═╡ 8610ef28-dd89-4cb1-9717-b237a20eeede
-md"""
-Provjerimo ortonormiranost sustava funkcija.
-"""
-
-# ╔═╡ e02874e6-d676-420b-9e6a-aa7cfd5b6ce2
-⋅(cos((2*n+1)*PI*x/2),cos((2*n+1)*PI*x/2),-1,1)
-
-# ╔═╡ e0a56710-d29a-4e43-ac26-afb0d64056f0
-⋅(sin(n*PI*x),sin(n*PI*x),-1,1)
-
-# ╔═╡ e6fb6e70-5621-4f12-876d-a7fc1c083f91
-md"""
-Norme svih funkcija su jednake $1$ pa ne trebamo računati nazivnike.
-"""
-
-# ╔═╡ 329fc0df-884a-4842-b27f-c6115e42c0bc
-a(n)=⋅(p(x),cos((2*n+1)*PI*x/2),-1,1)
-
-# ╔═╡ 0c2f0034-26a2-4d03-bd70-478ebe5110c3
-a(0)
-
-# ╔═╡ fd086bd3-1a9e-4f10-9707-f9a175ae4518
-N(a(0))
-
-# ╔═╡ 5d0b9b19-e55b-46e2-a12c-83c730828a83
-b(n)=⋅(p(x),sin(n*PI*x),-1,1)
-
-# ╔═╡ d02415b3-4e57-44a6-8be3-09c7abbdbcc4
-b(0)
-
-# ╔═╡ bcd1fe66-6389-463e-aaa0-a9764338b3d9
-b(17)
-
-# ╔═╡ 60b3aaeb-cb9c-4a6d-837e-bd2e20737292
-# Opća formule za a(n)
-⋅(p(x),cos((2*n+1)*PI*x/2),-1,1)
-
-# ╔═╡ 24e26b9e-0894-4e53-9cb3-fb1b79b2ec6f
-# Opća formule za b(n)
-⋅(p(x),sin(n*PI*x),-1,1)
-
-# ╔═╡ 816ebb55-4808-4829-b232-5b7f670ae0c7
-md"""
-Pripremimo se za brže računanje tako da ćemo unaprijed izračunati numeričke
-vrijednosti koeficijenata $a_n$ i $b_n$. 
-"""
-
-# ╔═╡ 67d96ec1-688c-4fbd-a046-989c4001c089
-A=[Float64(a(n)) for n=0:20]
-
-# ╔═╡ aa81d6a7-9103-4d13-8071-ec1355d2d1a2
-B=[Float64(b(n)) for n=0:20]
-
-# ╔═╡ bab59fda-bcc6-4094-b3d4-a471b4c305ee
+# ╔═╡ 16ec9237-36ea-4fc0-9141-cd43ab3a7f6e
 begin
-	X₁=range(-1,1,length=51)
-	T₁=range(0,5,length=51)
-end;
-
-# ╔═╡ a21d0a52-ba97-4d31-be17-c0ce97cee4fe
-begin
-	lₙ=20
-	h₁(x,t)=sum([A[k]*cos.((2*k-1)*pi*x/2).*exp.(-(((2*k-1)*pi/2)^2/4+1)*t)+
-	        B[k]*sin.((k-1)*pi*x).*exp.(-(((k-1)*pi)^2+1)*t) for k=1:lₙ]) 
-	surface(X₁,T₁,h₁,xlabel="x",ylabel="t")
+	f(x)=sin(x)
+	g(x)=x
 end
 
-# ╔═╡ a336d3c7-66fe-4ce4-b318-3736b705fd13
+# ╔═╡ 936e1cbe-9d27-4823-a589-50e516cb1b29
+begin
+	import LinearAlgebra.⋅
+	⋅(f,g,a,b)=integrate(f*g,(x,a,b))
+end
+
+# ╔═╡ 27a3c769-97bf-4782-935f-a83e47f56fcb
+a(n)=⋅(f(x),sin(n*x),0,PI)/⋅(sin(n*x),sin(n*x),0,PI)
+
+# ╔═╡ 18ef5fe7-5d8b-4423-874f-af17f7cce5b3
+a(4)
+
+# ╔═╡ 3d855d00-bdf6-40ec-92b4-a6787afddd85
+b(n)=⋅(g(x),sin(n*x),0,PI)/⋅(sin(n*x),sin(n*x),0,PI)/n
+
+# ╔═╡ 1ac04140-2385-48c2-ab04-bf4a0e18e2b5
+b(7)
+
+# ╔═╡ 8a1b7555-39f2-4ba8-b84f-7636cbaef233
+⋅(g(x),sin(n*x),0,PI)/⋅(sin(n*x),sin(n*x),0,PI)/n
+
+# ╔═╡ 4bb5d6ab-9de8-42d4-8976-57fb89ca257c
+begin
+	# Izračunajumo numeričke vrijednosti koeficijenata
+	l=20
+	Na=[Float64(a(k)) for k=1:l]
+	Nb=[Float64(b(k)) for k=1:l]
+end
+
+# ╔═╡ e14f9701-05a9-4311-ba2f-073e240253d7
+begin
+	# Pripremimo mrežu za crtanje
+	m=81
+	X=range(0,stop=pi,length=m)
+	T=range(0,stop=10,length=2*m)
+end
+
+# ╔═╡ 3da891ae-86f6-47f0-87be-f157a3435344
+u(x,t)=sum([ (Na[k]*cos.(k*t)+Nb[k].*sin.(k*t)).*sin.(k*x) for k in collect(1:l)])
+
+# ╔═╡ eb50680e-1eaa-4e21-8ee9-8a324f37d8f1
+surface(X,T,u,xlabel="x",ylabel="y")
+
+# ╔═╡ bb8033ee-91f9-4f8f-acdc-b2ff08e143f4
+begin
+	# Provjera rubnog uvjeta
+	x₁=range(0,stop=pi,length=m)
+	y=f.(x₁)
+	z=sum([Na[k]*sin.(k*x₁) for k=1:l])
+end
+
+# ╔═╡ aa4fea7d-8228-4434-bbc8-edb6257ddbb5
+plot(x₁,[y z],label=["Funkcija" "Red"])
+
+# ╔═╡ 4d9e3253-1c64-49cb-89ed-8311a1a02a29
 md"""
-# Homogenizacija
-
-U oba prethodna primjera zadani su homogeni rubni uvjeti. Ukoliko rubni uvjeti nisu homogeni, zadani problem je potrebno __homogenizirati__ kako bi mogli dobiti regularni SLP.
-
-Navedimo primjer. Neka je zadan problem
-
-$$
-\begin{aligned}
-& u_t -u_{xx}=0,\quad 0<x<l,\quad t>0 \\
-& u(x,0)=f(x),\quad 0<x<l \\
-& u(0,t)=g(t),\quad u(l,t)=h(t),\quad t>0.
-\end{aligned}$$
- 
-Nađimo rješenje u obliku
-
-$$
-u(x,t)=v(x,t)+U(x,t),$$
-
-gdje je $v$ rješenje problema sa homogenim rubnim uvjetima. Vrijedi
-
-$$
-\begin{aligned}
-& u=v+U\\
-& u_t=v_t+U_t\\
-& u_{xx}=v_{xx}+U_{xx}
-\end{aligned}$$
-
-pa zadana PDJ prelazi u 
-
-$$
-v_t+U_t=v_{xx}+U_{xx}.$$
-
-Početni uvjet za $v$ glasi
-
-$$
-v(x,0)=u(x,0)-U(x,0)=f(x)-U(x,0),$$
-
-a rubni uvjeti glase
-
-$$
-\begin{aligned}
-& v(0,t)=u(0,t)-U(0,t)=g(t)-U(0,t)=0\quad  \textrm{(želimo homogeni uvjet)}\\
-& v(l,t)=u(l,t)-U(l,t)=h(t)-U(l,t)=0 \quad  \textrm{(želimo homogeni uvjet)}
-\end{aligned}$$
-
-Zaključujemo da će $v$ zadovoljavati homogene rubne uvjete ako je 
-
-$$
-U(x,t)=g(t)+\displaystyle\frac{x}{l}[h(t)-g(t)],\quad 0<x<l.$$
-
-Za ovako definiranu funkciju $U$ vrijedi
-
-$$
-\begin{aligned}
-& U_t=g'(t)+\displaystyle\frac{x}{l}[h'(t)-g'(t)]\\
-& U_{xx}=0.
-\end{aligned}$$
-
-Uvrštavanjem slijedi da je $v$ rješenje __homogenog__ reakcijsko-difuzijskog problema
-
-$$
-\begin{aligned}
-&v_t=v_{xx}-g'(t)-\displaystyle\frac{x}{l}[h'(t)-g'(t)], \quad 0<x<l,\quad t>0
-\\
-&v(x,0)=f(x)-g(0)-\displaystyle\frac{x}{l}[h(0)-g(0)], \quad 0<x<l
-\\
-& v(0,t)=0,\quad v(l,t)=0,\quad t>0,
-\end{aligned}$$
-
-dok je rješenje polaznog problema
-
-$$
-u(x,t)=v(x,t)+g(t)+\displaystyle\frac{x}{l}[h(t)-g(t)].$$
+__Zadatak__: Što se dogodi ako početni uvjet nije kompatibilan s rubnim uvjetima? Nacrtajte i objasnite rješenje za 
+$f(x)=\cos(x)$.
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -590,13 +215,11 @@ PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 SymPy = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
 
 [compat]
-Plots = "~1.22.4"
-PlutoUI = "~0.7.16"
-SymPy = "~1.0.52"
+Plots = "~1.22.6"
+SymPy = "~1.0.53"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -632,9 +255,9 @@ version = "1.16.1+0"
 
 [[ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "a325370b9dd0e6bf5656a6f1a7ae80755f8ccc46"
+git-tree-sha1 = "2f294fae04aa5069a67964a3366e151e09ea7c09"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.7.2"
+version = "1.9.0"
 
 [[ColorSchemes]]
 deps = ["ColorTypes", "Colors", "FixedPointNumbers", "Random"]
@@ -786,9 +409,9 @@ version = "3.3.5+0"
 
 [[GR]]
 deps = ["Base64", "DelimitedFiles", "GR_jll", "HTTP", "JSON", "Libdl", "LinearAlgebra", "Pkg", "Printf", "Random", "Serialization", "Sockets", "Test", "UUIDs"]
-git-tree-sha1 = "c2178cfbc0a5a552e16d097fae508f2024de61a3"
+git-tree-sha1 = "d189c6d2004f63fd3c91748c458b09f26de0efaa"
 uuid = "28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71"
-version = "0.59.0"
+version = "0.61.0"
 
 [[GR_jll]]
 deps = ["Artifacts", "Bzip2_jll", "Cairo_jll", "FFMPEG_jll", "Fontconfig_jll", "GLFW_jll", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Libtiff_jll", "Pixman_jll", "Pkg", "Qt5Base_jll", "Zlib_jll", "libpng_jll"]
@@ -837,23 +460,6 @@ git-tree-sha1 = "8a954fed8ac097d5be04921d595f741115c1b2ad"
 uuid = "2e76f6c2-a576-52d4-95c1-20adfe4de566"
 version = "2.8.1+0"
 
-[[Hyperscript]]
-deps = ["Test"]
-git-tree-sha1 = "8d511d5b81240fc8e6802386302675bdf47737b9"
-uuid = "47d2ed2b-36de-50cf-bf87-49c2cf4b8b91"
-version = "0.0.4"
-
-[[HypertextLiteral]]
-git-tree-sha1 = "f6532909bf3d40b308a0f360b6a0e626c0e263a8"
-uuid = "ac1192a8-f4b3-4bfe-ba22-af5b92cd3ab2"
-version = "0.9.1"
-
-[[IOCapture]]
-deps = ["Logging", "Random"]
-git-tree-sha1 = "f7be53659ab06ddc986428d3a9dcc95f6fa6705a"
-uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
-version = "0.2.2"
-
 [[IniFile]]
 deps = ["Test"]
 git-tree-sha1 = "098e4d2c533924c921f9f9847274f2ad89e018b8"
@@ -865,9 +471,9 @@ deps = ["Markdown"]
 uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
 [[IrrationalConstants]]
-git-tree-sha1 = "f76424439413893a832026ca355fe273e93bce94"
+git-tree-sha1 = "7fd44fd4ff43fc60815f8e764c0f352b83c49151"
 uuid = "92d709cd-6900-40b7-9082-c6be49f344b6"
-version = "0.1.0"
+version = "0.1.1"
 
 [[IterTools]]
 git-tree-sha1 = "05110a2ab1fc5f932622ffea2a003221f4782c18"
@@ -1086,9 +692,9 @@ version = "8.44.0+0"
 
 [[Parsers]]
 deps = ["Dates"]
-git-tree-sha1 = "a8709b968a1ea6abc2dc1967cb1db6ac9a00dfb6"
+git-tree-sha1 = "98f59ff3639b3d9485a03a72f3ab35bab9465720"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
-version = "2.0.5"
+version = "2.0.6"
 
 [[Pixman_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1114,15 +720,9 @@ version = "1.0.15"
 
 [[Plots]]
 deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "GeometryBasics", "JSON", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs"]
-git-tree-sha1 = "6841db754bd01a91d281370d9a0f8787e220ae08"
+git-tree-sha1 = "ba43b248a1f04a9667ca4a9f782321d9211aa68e"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.22.4"
-
-[[PlutoUI]]
-deps = ["Base64", "Dates", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "Markdown", "Random", "Reexport", "UUIDs"]
-git-tree-sha1 = "4c8a7d080daca18545c56f1cac28710c362478f3"
-uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
-version = "0.7.16"
+version = "1.22.6"
 
 [[Preferences]]
 deps = ["TOML"]
@@ -1245,10 +845,10 @@ uuid = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
 version = "0.6.3"
 
 [[SymPy]]
-deps = ["CommonEq", "CommonSolve", "LinearAlgebra", "Markdown", "PyCall", "RecipesBase", "SpecialFunctions"]
-git-tree-sha1 = "1ef257ecbcab8058595a68ca36a6844b41babcbd"
+deps = ["CommonEq", "CommonSolve", "Latexify", "LinearAlgebra", "Markdown", "PyCall", "RecipesBase", "SpecialFunctions"]
+git-tree-sha1 = "decd00935f4ced950109128b9fff344aaf1942d1"
 uuid = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
-version = "1.0.52"
+version = "1.0.53"
 
 [[TOML]]
 deps = ["Dates"]
@@ -1503,78 +1103,24 @@ version = "0.9.1+5"
 """
 
 # ╔═╡ Cell order:
-# ╠═7d6aa743-e05c-4f4a-9c1e-5b29903a7386
-# ╠═0c650d04-522a-4d3d-a3a7-eef4848452b8
-# ╠═6eff0f94-9807-43cf-97eb-a8b29d9e6f40
-# ╟─47bf3638-8134-496d-ba98-e4611aadb720
-# ╟─2d6cce29-1383-41e1-8e8c-653db856329b
-# ╟─79e6ad88-8838-4029-bead-99de981da955
-# ╠═fc7e565d-680b-476c-bf89-4091e9c7bc0b
-# ╠═671eea4b-486a-4e77-98bb-1dca4c56873c
-# ╠═c4d89894-088f-446c-b4ce-d9c78af73d2c
-# ╟─9b90ab1d-1843-4a3b-813e-eac93903bb05
-# ╠═407e4a6d-bb34-40ea-8694-1e4a21a15193
-# ╠═b08a5be1-90b7-4c36-b4ac-83ca75b3d31f
-# ╠═49de3080-a15b-4ea6-bfcb-d9fd4c5063fa
-# ╠═c66069da-f439-4f7a-b1a9-8970051b221f
-# ╟─c8c5a472-c781-4894-b557-8ff121ba4077
-# ╠═07016beb-48d0-41bd-9798-ba0cc9cf10fd
-# ╠═8a64a59f-b6c7-42e8-ace2-e47b27fc9d0e
-# ╠═d70c37fa-6bfc-43a1-a3d1-e53d680bbd78
-# ╠═3d20eccd-637e-46f9-aa4e-f6f730e445ee
-# ╠═051777e6-45df-47df-81f7-46d07d679133
-# ╠═f466ab29-7dc0-4435-8feb-f40549367b91
-# ╠═694f43db-af83-46aa-ba05-ae2c40e2f1b8
-# ╠═b2b2fcef-69d6-4a6c-860d-92b7ab2cafca
-# ╟─9327f715-8ef6-4187-8e0f-674caba4ae41
-# ╟─4c9eba19-f68e-4865-b8d2-e5b620212d4e
-# ╠═f5edf223-60a7-48f1-8386-8dabaaba5790
-# ╠═79b3caec-b5f5-4ba4-8550-cc202eb5d9d0
-# ╠═9a95ed5f-94fd-487a-bfd2-fbea45124db3
-# ╠═f96fdfc8-6bf7-4a67-b18e-0771efe377eb
-# ╠═1f7ef259-df1e-4e1b-8bff-5f03ae2252ed
-# ╠═05419561-4764-418c-8184-c6be1ea6bfcc
-# ╠═6f71559b-356a-414d-b226-a70fd50db330
-# ╠═cb246811-3d02-461e-8700-47dc8f8f347a
-# ╠═42f86e27-6812-4c3c-979d-860c40728a67
-# ╠═77b2e2ef-3456-4e53-b71f-0a49d2e0478c
-# ╟─a6b00d81-41b9-4880-961a-5a63f02cd9bd
-# ╠═d9d895a8-7b12-4415-8902-805ce2471f1c
-# ╠═29280217-8af2-4679-a9a8-26b83c65b7c2
-# ╠═4b8df6fe-6a9b-4cd1-b25b-fc8c74759d64
-# ╠═aeebc30b-210e-44cc-b876-cebfc0d6e13a
-# ╠═7888a4ef-6761-40ce-b5b6-bae3381d8264
-# ╟─510c9f4c-bcf1-4a19-ae12-2211d01bf192
-# ╠═52f2f326-8fb0-465b-93be-e019afe93061
-# ╠═4b811a75-9b72-45ed-bbaa-8e323c588a36
-# ╟─de02f5f9-9559-445c-b883-96aad3292dc8
-# ╠═80cb356e-065c-43ac-85a5-0d9c64cd9176
-# ╠═e3c68a65-82ef-492e-9283-88edd8cc26e2
-# ╠═ab5389ea-0126-4974-8e57-7d2782ca8b76
-# ╠═3e56b49d-9462-4426-a88d-d6a45ce2bf9c
-# ╟─79794948-8b69-480d-a34c-a40ab0b13300
-# ╠═75b46887-f4c5-4514-aec9-e94a54477ba1
-# ╠═e6abef29-40bb-4a09-9163-39947e5364e3
-# ╠═cf271e99-4be3-4fac-bcde-0988323000ce
-# ╟─0a6d295e-68be-41a9-9312-1c8fd8549cd3
-# ╠═788235d8-c271-4d8f-abd6-9e3316c01298
-# ╟─8610ef28-dd89-4cb1-9717-b237a20eeede
-# ╠═e02874e6-d676-420b-9e6a-aa7cfd5b6ce2
-# ╠═e0a56710-d29a-4e43-ac26-afb0d64056f0
-# ╟─e6fb6e70-5621-4f12-876d-a7fc1c083f91
-# ╠═329fc0df-884a-4842-b27f-c6115e42c0bc
-# ╠═0c2f0034-26a2-4d03-bd70-478ebe5110c3
-# ╠═fd086bd3-1a9e-4f10-9707-f9a175ae4518
-# ╠═5d0b9b19-e55b-46e2-a12c-83c730828a83
-# ╠═d02415b3-4e57-44a6-8be3-09c7abbdbcc4
-# ╠═bcd1fe66-6389-463e-aaa0-a9764338b3d9
-# ╠═60b3aaeb-cb9c-4a6d-837e-bd2e20737292
-# ╠═24e26b9e-0894-4e53-9cb3-fb1b79b2ec6f
-# ╟─816ebb55-4808-4829-b232-5b7f670ae0c7
-# ╠═67d96ec1-688c-4fbd-a046-989c4001c089
-# ╠═aa81d6a7-9103-4d13-8071-ec1355d2d1a2
-# ╠═bab59fda-bcc6-4094-b3d4-a471b4c305ee
-# ╠═a21d0a52-ba97-4d31-be17-c0ce97cee4fe
-# ╟─a336d3c7-66fe-4ce4-b318-3736b705fd13
+# ╠═946ca26e-2657-4ad8-8fc2-120261cc1667
+# ╠═42055806-717f-4fdc-9889-a642cf4ba772
+# ╟─f6a7edb9-c364-46cf-93c3-a3fd17bd660a
+# ╟─d09ae748-fcb6-44e4-9fad-bf47ee5efc52
+# ╠═21a2ac08-7935-41c2-8204-fac2c6c9aa3a
+# ╠═16ec9237-36ea-4fc0-9141-cd43ab3a7f6e
+# ╠═936e1cbe-9d27-4823-a589-50e516cb1b29
+# ╠═27a3c769-97bf-4782-935f-a83e47f56fcb
+# ╠═18ef5fe7-5d8b-4423-874f-af17f7cce5b3
+# ╠═3d855d00-bdf6-40ec-92b4-a6787afddd85
+# ╠═1ac04140-2385-48c2-ab04-bf4a0e18e2b5
+# ╠═8a1b7555-39f2-4ba8-b84f-7636cbaef233
+# ╠═4bb5d6ab-9de8-42d4-8976-57fb89ca257c
+# ╠═e14f9701-05a9-4311-ba2f-073e240253d7
+# ╠═3da891ae-86f6-47f0-87be-f157a3435344
+# ╠═eb50680e-1eaa-4e21-8ee9-8a324f37d8f1
+# ╠═bb8033ee-91f9-4f8f-acdc-b2ff08e143f4
+# ╠═aa4fea7d-8228-4434-bbc8-edb6257ddbb5
+# ╟─4d9e3253-1c64-49cb-89ed-8311a1a02a29
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
