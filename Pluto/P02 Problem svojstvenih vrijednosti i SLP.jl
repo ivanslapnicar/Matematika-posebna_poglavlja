@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.0
+# v0.16.3
 
 using Markdown
 using InteractiveUtils
@@ -72,7 +72,7 @@ slijedi $\alpha=0$ pa su $x$ i $y$ linearno nezavisni.
 
 __Teorem__.  Ako je $A$ simetrična matrica, $A=A^T$, tada su sve svojstvene vrijednosti realne i imaju ortogonalni skup svojstvenih vektora, osnosno postoji matrica $U$ takva da je 
 
-$$U^TU=UU^T=I\\
+$$U^TU=UU^T=I,\quad 
 A=U\Lambda U^T, \quad AU=U\Lambda, \quad A=\sum_{i=1}^n \lambda_i u_i u_i^T.$$
 """
 
@@ -335,7 +335,7 @@ $$
 L(\alpha x+\beta y)=\alpha L(x) + \beta L(y).$$
 
 
-### Primjer - matrica je linearni operator na skupu vektora
+### Matrica je linearni operator na skupu vektora
 
 Uz definiciju
 
@@ -416,7 +416,7 @@ md"""
 
 Neka su zadane funkcije $f,g\in C[a,b]$, gdje je $C[a,b]$ skup svih funkcija neprekidnih na intervalu $[a,b]$. 
 
-_Napomena_. Umjesto skupa $C[a,b]$ može se uzeti i neki skup, na primjer, skup svih kvadratno integrabilnih funkcija na intervalu $[a,b]$ kojeg označavamo s  $L^2[a,b]$.
+__Napomena__. Umjesto skupa $C[a,b]$ može se uzeti i neki skup, na primjer, skup svih kvadratno integrabilnih funkcija na intervalu $[a,b]$ kojeg označavamo s  $L^2[a,b]$.
 
 Definirajmo __skalarni produkt__: 
 
