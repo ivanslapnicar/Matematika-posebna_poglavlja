@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.0
+# v0.16.4
 
 using Markdown
 using InteractiveUtils
@@ -61,15 +61,16 @@ $$
 Vremenska promjena količine tvari unutar $I$ jednaka je zbroju stope po kojoj tvar ulazi u $I$ i stope po kojoj tvar nastaje/nestaje u $I$:
 
 $$
-\frac{d}{dt} \int\limits_a^b u(x,t) A \, dx =A\phi(a,t)-A\phi(b,t) + \int\limits_a^b f(x,t,u)A\, dx.
-$$
+\frac{d}{dt} \int\limits_a^b u(x,t) A \, dx =A\phi(a,t)-A\phi(b,t) + \int\limits_a^b f(x,t,u)A\, dx.$$
 
 Možemo skratiti s $A$ i dobili smo __zakon očuvanja u integralnom obliku__:
 
 $$
-\frac{d}{dt} \int\limits_a^b u(x,t)\, dx =\phi(a,t)-\phi(b,t) + \int\limits_a^b f(x,t,u)\, dx.
-$$
+\frac{d}{dt} \int\limits_a^b u(x,t)\, dx =\phi(a,t)-\phi(b,t) + \int\limits_a^b f(x,t,u)\, dx.$$
+"""
 
+# ╔═╡ 9400ecbe-ab0f-4e99-9d1a-6e44df4bad94
+md"""
 Pretpostavimo da su $u$ i $\phi$ neprekidno diferencijabilne (glatke) funkcije. Na lijevu stranu jednadžbe primijenimo [postupak deriviranja pod znakom integrala (Leibnitz-ovu formulu)](http://lavica.fesb.hr/mat2/predavanja/node81.html), a desnu stranu jednadžbe primijenimo [Newton-Leibnitzovu formulu](http://lavica.fesb.unist.hr/mat2/predavanja/node27.html) u obrnutom smislu, pa imamo
 
 $$
@@ -340,6 +341,7 @@ uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 # ╠═a20ab82c-881d-4a01-97cc-b18fccb76af0
 # ╠═16e6736a-084f-4a86-a0e4-988c22778768
 # ╟─4c99ed0d-147a-4a4a-a634-6d0debca4c5b
+# ╟─9400ecbe-ab0f-4e99-9d1a-6e44df4bad94
 # ╟─bf50b209-2e29-48ac-82a7-56dd5bdde7ad
 # ╟─da5b4f30-cf98-4f10-bd32-6fb863191456
 # ╟─97219b4d-9430-48e1-8f74-d9252c61a283
