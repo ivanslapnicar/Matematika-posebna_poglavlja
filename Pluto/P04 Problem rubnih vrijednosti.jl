@@ -250,38 +250,38 @@ begin
 end
 
 # ╔═╡ 79b3caec-b5f5-4ba4-8550-cc202eb5d9d0
-u(n,x,t)=C(n)*f(n,x)*exp(-(n^2*PI^2/4)*t)
+u(x,t,n)=C(n)*f(n,x)*exp(-(n^2*PI^2/4)*t)
 
 # ╔═╡ 9a95ed5f-94fd-487a-bfd2-fbea45124db3
 # Na primjer
-u(0,x,t)
+u(x,t,0)
 
 # ╔═╡ f96fdfc8-6bf7-4a67-b18e-0771efe377eb
-u(3,x,t)
+u(x,t,3)
 
 # ╔═╡ 1f7ef259-df1e-4e1b-8bff-5f03ae2252ed
-# u(3,x,t) u zadanoj točki
-u(3,0.5,0.5)
+# u(x,t,3) u zadanoj točki
+u(0.5,0.5,3)
 
 # ╔═╡ 05419561-4764-418c-8184-c6be1ea6bfcc
 # Numerička vrijednost (BigFloat)
-N(u(3,0.5,0.5))
+N(u(0.5,0.5,3))
 
 # ╔═╡ 6f71559b-356a-414d-b226-a70fd50db330
 # Suma prvih n članova reda
-U(n,x,t)=sum([u(k,x,t) for k=0:n])
+U(x,t,n)=sum([u(x,t,k) for k=0:n])
 
 # ╔═╡ cb246811-3d02-461e-8700-47dc8f8f347a
 # Na primjer
-U(5,0.5,0.5)
+U(0.5,0.5,5)
 
 # ╔═╡ 42f86e27-6812-4c3c-979d-860c40728a67
 # Numerička vrijednost
-N(U(5,0.5,0.5))
+N(U(0.5,0.5,5))
 
 # ╔═╡ 77b2e2ef-3456-4e53-b71f-0a49d2e0478c
 # Za t=0 ovo mora konvergirati u |x|
-@time N(U(11,0.5,0.0))
+@time N(U(0.5,0.0,11))
 
 # ╔═╡ a6b00d81-41b9-4880-961a-5a63f02cd9bd
 md"""
@@ -299,11 +299,11 @@ end
 
 # ╔═╡ 29280217-8af2-4679-a9a8-26b83c65b7c2
 # Radi brzine pripremimo U(9) unaprijed
-U9=U(9,x,t)
+U9=U(x,t,9)
 
 # ╔═╡ 4b8df6fe-6a9b-4cd1-b25b-fc8c74759d64
 # Sada je puno brže jer se samo uvrštava.
-@time Float64(U9(0,2.0))
+@time Float64(U9(0.5,0.0))
 
 # ╔═╡ aeebc30b-210e-44cc-b876-cebfc0d6e13a
 FU9(x,t)=Float64(U9(x,t))
