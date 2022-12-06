@@ -325,7 +325,7 @@ end
 # ╔═╡ 4b811a75-9b72-45ed-bbaa-8e323c588a36
 begin
 	# Probajmo l od 1 do 10
-	l=5
+	l=8
 	h(x,t)=1-8*sum([cos.((2*k-1)*pi*x/2).*exp.(-(2*k-1)^2*pi^2*t/4)/((2*k-1)^2*π^2) 
 	        for k=1:l])
 	surface(Xₙ,Tₙ,h,xlabel="x",ylabel="t")
@@ -460,7 +460,7 @@ Norme svih funkcija su jednake $1$ pa ne trebamo računati nazivnike.
 a(n)=⋅(p(x),cos((2*n+1)*PI*x/2),-1,1)
 
 # ╔═╡ 0c2f0034-26a2-4d03-bd70-478ebe5110c3
-a(0)
+a(17)
 
 # ╔═╡ fd086bd3-1a9e-4f10-9707-f9a175ae4518
 N(a(0))
@@ -472,7 +472,7 @@ b(n)=⋅(p(x),sin(n*PI*x),-1,1)
 b(0)
 
 # ╔═╡ bcd1fe66-6389-463e-aaa0-a9764338b3d9
-b(17)
+b(1)
 
 # ╔═╡ 60b3aaeb-cb9c-4a6d-837e-bd2e20737292
 # Opća formule za a(n)
@@ -489,20 +489,23 @@ vrijednosti koeficijenata $a_n$ i $b_n$.
 """
 
 # ╔═╡ 67d96ec1-688c-4fbd-a046-989c4001c089
-A=[Float64(a(n)) for n=0:20]
+A=[Float64(a(n)) for n=0:40]
+
+# ╔═╡ d333c6a9-1ed4-49f8-b297-aa7824e70496
+A[1]
 
 # ╔═╡ aa81d6a7-9103-4d13-8071-ec1355d2d1a2
-B=[Float64(b(n)) for n=0:20]
+B=[Float64(b(n)) for n=0:40]
 
 # ╔═╡ bab59fda-bcc6-4094-b3d4-a471b4c305ee
 begin
-	X₁=range(-1,1,length=51)
-	T₁=range(0,5,length=51)
+	X₁=range(-1,1,length=101)
+	T₁=range(0,3,length=101)
 end;
 
 # ╔═╡ a21d0a52-ba97-4d31-be17-c0ce97cee4fe
 begin
-	lₙ=20
+	lₙ=40
 	h₁(x,t)=sum([A[k]*cos.((2*k-1)*pi*x/2).*exp.(-(((2*k-1)*pi/2)^2/4+1)*t)+
 	        B[k]*sin.((k-1)*pi*x).*exp.(-(((k-1)*pi)^2+1)*t) for k=1:lₙ]) 
 	surface(X₁,T₁,h₁,xlabel="x",ylabel="t")
@@ -1608,6 +1611,7 @@ version = "0.9.1+5"
 # ╠═24e26b9e-0894-4e53-9cb3-fb1b79b2ec6f
 # ╟─816ebb55-4808-4829-b232-5b7f670ae0c7
 # ╠═67d96ec1-688c-4fbd-a046-989c4001c089
+# ╠═d333c6a9-1ed4-49f8-b297-aa7824e70496
 # ╠═aa81d6a7-9103-4d13-8071-ec1355d2d1a2
 # ╠═bab59fda-bcc6-4094-b3d4-a471b4c305ee
 # ╠═a21d0a52-ba97-4d31-be17-c0ce97cee4fe
