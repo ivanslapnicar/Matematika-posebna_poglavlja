@@ -59,7 +59,7 @@ Dakle, i lijevi i desni val zadovoljavaju __valnu jednadžbu__
 $$
 u_{tt}-c^2u_{xx}=0.$$
 
-Obrnuto, zaključujemo da je rješenje valne jednadžbe proizlazi iz funkcije $f(x)$ kao superpozicija (zbroj) lijevog i desnog vala. 
+Obrnuto, zaključujemo da rješenje valne jednadžbe proizlazi iz funkcije $f(x)$ kao superpozicija (zbroj) lijevog i desnog vala. 
 
 """
 
