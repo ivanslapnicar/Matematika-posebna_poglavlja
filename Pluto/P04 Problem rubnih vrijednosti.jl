@@ -188,7 +188,7 @@ f(n,x)=cos(n*PI*x/2)
 
 # ╔═╡ 49de3080-a15b-4ea6-bfcb-d9fd4c5063fa
 # Na primjer
-f(2,x)
+f(3,x)
 
 # ╔═╡ c66069da-f439-4f7a-b1a9-8970051b221f
 f(0,x)
@@ -312,7 +312,10 @@ U9=U(x,t,9)
 FU9(x,t)=Float64(U9(x,t))
 
 # ╔═╡ 7888a4ef-6761-40ce-b5b6-bae3381d8264
-surface(X,T,FU9,xlabel="x",ylabel="t")
+surface(T,X,FU9,xlabel="t",ylabel="x")
+
+# ╔═╡ c8d8cc20-686f-43cb-beef-9d518d3f10d8
+
 
 # ╔═╡ 510c9f4c-bcf1-4a19-ae12-2211d01bf192
 md"""
@@ -609,7 +612,7 @@ SymPy = "~1.2.0"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.3"
+julia_version = "1.9.4"
 manifest_format = "2.0"
 project_hash = "cf3cb77ed2eefe1fd975eb4ed3d8f4c286b61659"
 
@@ -967,12 +970,12 @@ version = "0.16.1"
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
 uuid = "b27032c2-a3e7-50c8-80cd-2d36dbcbfd21"
-version = "0.6.3"
+version = "0.6.4"
 
 [[deps.LibCURL_jll]]
 deps = ["Artifacts", "LibSSH2_jll", "Libdl", "MbedTLS_jll", "Zlib_jll", "nghttp2_jll"]
 uuid = "deac9b47-8bc7-5906-a0fe-35ac56dc84c0"
-version = "7.84.0+0"
+version = "8.4.0+0"
 
 [[deps.LibGit2]]
 deps = ["Base64", "NetworkOptions", "Printf", "SHA"]
@@ -981,7 +984,7 @@ uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
 [[deps.LibSSH2_jll]]
 deps = ["Artifacts", "Libdl", "MbedTLS_jll"]
 uuid = "29816b5a-b9ab-546f-933c-edad1886dfa8"
-version = "1.10.2+0"
+version = "1.11.0+1"
 
 [[deps.Libdl]]
 uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
@@ -1722,7 +1725,7 @@ version = "1.1.6+0"
 [[deps.nghttp2_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "8e850ede-7688-5339-a07c-302acd2aaf8d"
-version = "1.48.0+0"
+version = "1.52.0+1"
 
 [[deps.p7zip_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -1791,6 +1794,7 @@ version = "1.4.1+1"
 # ╠═4b8df6fe-6a9b-4cd1-b25b-fc8c74759d64
 # ╠═aeebc30b-210e-44cc-b876-cebfc0d6e13a
 # ╠═7888a4ef-6761-40ce-b5b6-bae3381d8264
+# ╠═c8d8cc20-686f-43cb-beef-9d518d3f10d8
 # ╟─510c9f4c-bcf1-4a19-ae12-2211d01bf192
 # ╠═52f2f326-8fb0-465b-93be-e019afe93061
 # ╠═4b811a75-9b72-45ed-bbaa-8e323c588a36
