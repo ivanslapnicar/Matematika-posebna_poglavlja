@@ -181,7 +181,7 @@ laplace_transform(t^0,t,s)
 
 # ╔═╡ f75b7b8e-7beb-4e62-8f7e-52a3ad86b1c7
 # u(x,s)=
-factor(cancel(inverse_laplace_transform(exp(-√(s)*x)/s,s,t)))
+factor(inverse_laplace_transform(exp(-√(s)*x)/s,s,t))
 
 # ╔═╡ 9608ade0-bf77-443a-8978-cff8624eba00
 md"""
